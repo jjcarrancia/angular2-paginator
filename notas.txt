@@ -1,4 +1,0 @@
-Configurar app con rc4
-Crear component AppComponent
-Añadir styleUrls
-Crear ./assets/css/app.css
