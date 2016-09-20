@@ -1,6 +1,6 @@
 {
   "name": "angular2-paginator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A pagination module for angular2 projects.",
   "main": "paginator.js",
   "scripts": {
@@ -13,7 +13,12 @@
   "keywords": [
     "angular2",
     "paginator",
-    "pagination"
+    "pagination",
+    "ng2",
+    "ng2-paginator",
+    "ng2-pagination",
+    "angular2-paginator",
+    "angular2-pagination"
   ],
   "author": "jjcarrancia <jjcn1992@hotmail.com>",
   "license": "ISC",

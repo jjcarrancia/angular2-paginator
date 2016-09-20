@@ -21,6 +21,7 @@ import {Component, OnChanges, OnInit, EventEmitter, Input, Output} from "@angula
       border-radius: 4px;
     }
     ul.pagination-ss li{
+      list-style-type: none;
       float: left;
       padding: 6px 12px;
       color: #00a9e0;
