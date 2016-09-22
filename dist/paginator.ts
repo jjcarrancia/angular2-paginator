@@ -1,8 +1,8 @@
 import {Component, OnChanges, OnInit, EventEmitter, Input, Output} from "@angular/core";
 
 @Component({
-  selector: "angular2-paginator",
-  template: `
+    selector: "angular2-paginator",
+    template: `
     <div *ngIf="totalItems > 10">
       <ul class="pagination-ss">
         <li *ngIf="(block !== 0) && (lastBlock > 0)" (click)="changePage(1)">{{first}}</li>
@@ -13,7 +13,7 @@ import {Component, OnChanges, OnInit, EventEmitter, Input, Output} from "@angula
       </ul>
     </div>
   `,
-  styles: [`
+    styles: [`
     ul.pagination-ss{
       display: inline-block;
       padding-left: 0;
@@ -49,74 +49,86 @@ import {Component, OnChanges, OnInit, EventEmitter, Input, Output} from "@angula
 })
 
 export class Paginator implements OnChanges, OnInit {
-  pages: Array<any> = [];
-  actualPage: number;
-  lastPage: number;
-  block: number;
-  lastBlock: number;
-  first: string;
-  last: string;
-  /* Inputs */
-  @Input() pageSize: number;
-  @Input() totalItems: number;
-  @Input() blockSize: number;
-  @Input() firstElementMessage: string;
-  @Input() lastElementMessage: string;
-  /* Outputs */
-  @Output() onPageChange: EventEmitter<any> = new EventEmitter();
+    pages: Array<any> = [];
+    actualPage: number;
+    lastPage: number;
+    block: number;
+    lastBlock: number;
+    first: string;
+    last: string;
+    psize: number;
+    bsize: number;
+    /* Inputs */
+    @Input() pageSize: number;
+    @Input() totalItems: number;
+    @Input() blockSize: number;
+    @Input() firstElementMessage: string;
+    @Input() lastElementMessage: string;
+    /* Outputs */
+    @Output() onPageChange: EventEmitter<any> = new EventEmitter();
 
-  constructor() {
-    this.actualPage = 1;
-    this.block = 0;
-  }
+    constructor() {
+        this.actualPage = 1;
+        this.block = 0;
+    }
 
-  ngOnInit() {
-    if (this.firstElementMessage || this.firstElementMessage === "") {
-      this.first = this.firstElementMessage;
-    } else {
-      this.first = "<<";
+    ngOnInit() {
+        if (this.pageSize && this.pageSize > 0) {
+            this.psize = this.pageSize;
+        } else {
+            this.psize = 10;
+        }
+        if (this.blockSize && this.blockSize > 0) {
+            this.bsize = this.blockSize;
+        } else {
+            this.bsize = 5;
+        }
+        if (this.firstElementMessage || this.firstElementMessage === "") {
+            this.first = this.firstElementMessage;
+        } else {
+            this.first = "<<";
+        }
+        if (this.lastElementMessage || this.lastElementMessage === "") {
+            this.last = this.lastElementMessage;
+        } else {
+            this.last = ">>";
+        }
     }
-    if (this.lastElementMessage || this.lastElementMessage === "") {
-      this.last = this.lastElementMessage;
-    } else {
-      this.last = ">>";
-    }
-  }
 
-  ngOnChanges(change) {
-    this.lastPage = Math.ceil(this.totalItems / this.pageSize);
-    this.lastBlock = Math.ceil(this.lastPage / this.blockSize) - 1;
-    this.pages = [];
-    for (let b = 0; b <= this.lastBlock; b++) {
-      this.pages.push([]);
+    ngOnChanges(change) {
+        this.lastPage = Math.ceil(this.totalItems / this.psize);
+        this.lastBlock = Math.ceil(this.lastPage / this.bsize) - 1;
+        this.pages = [];
+        for (let b = 0; b <= this.lastBlock; b++) {
+            this.pages.push([]);
+        }
+        let indexBlock = 0;
+        for (let i = 1; i <= this.lastPage; i++) {
+            this.pages[indexBlock].push(i);
+            if (i % this.bsize === 0) {
+                indexBlock++;
+            }
+        }
+        if (change.totalItems.currentValue % this.psize === 0 && change.totalItems.previousValue % this.psize === 1) {
+            this.deletePage();
+        }
     }
-    let indexBlock = 0;
-    for (let i = 1; i <= this.lastPage; i++) {
-      this.pages[indexBlock].push(i);
-      if (i % this.blockSize === 0) {
-        indexBlock++;
-      }
-    }
-    if (change.totalItems.currentValue % this.pageSize === 0 && change.totalItems.previousValue % this.pageSize === 1) {
-      this.deletePage();
-    }
-  }
 
-  deletePage() {
-    if (this.actualPage > this.lastPage) {
-      this.actualPage--;
-      this.block = Math.ceil(this.actualPage / this.blockSize) - 1;
-      this.lastPage = Math.ceil(this.totalItems / this.pageSize);
-      this.lastBlock = Math.ceil(this.lastPage / this.blockSize) - 1;
-      this.onPageChange.emit(this.actualPage);
+    deletePage() {
+        if (this.actualPage > this.lastPage) {
+            this.actualPage--;
+            this.block = Math.ceil(this.actualPage / this.bsize) - 1;
+            this.lastPage = Math.ceil(this.totalItems / this.psize);
+            this.lastBlock = Math.ceil(this.lastPage / this.bsize) - 1;
+            this.onPageChange.emit(this.actualPage);
+        }
     }
-  }
 
-  changePage(n: number) {
-    if (this.actualPage !== n && n > 0 && n <= this.lastPage) {
-      this.block = Math.ceil(n / this.blockSize) - 1;
-      this.actualPage = n;
-      this.onPageChange.emit(this.actualPage);
+    changePage(n: number) {
+        if (this.actualPage !== n && n > 0 && n <= this.lastPage) {
+            this.block = Math.ceil(n / this.bsize) - 1;
+            this.actualPage = n;
+            this.onPageChange.emit(this.actualPage);
+        }
     }
-  }
 }
