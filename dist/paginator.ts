@@ -3,7 +3,7 @@ import {Component, OnChanges, OnInit, EventEmitter, Input, Output} from "@angula
 @Component({
     selector: "angular2-paginator",
     template: `
-    <div *ngIf="totalItems > 10">
+    <div *ngIf="totalItems > psize">
       <ul class="pagination-ss">
         <li *ngIf="(block !== 0) && (lastBlock > 0)" (click)="changePage(1)">{{first}}</li>
         <li *ngIf="actualPage !== 1" (click)="changePage(actualPage - 1)"> < </li>
